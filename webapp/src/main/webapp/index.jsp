@@ -1,5 +1,6 @@
 <h1> Hello, Welcome to Devops Technologies !!! </h1>
-<h2> Simple CI/CD deployment </h2
+<h2> Simple CI/CD deployment </h2>
+
   <h1> ---
   - hosts: web-servers
     become: true
@@ -13,3 +14,6 @@
        
      - name: create docker image
        shell: docker run -d --name tomcat_demo -p 8090:8080 sudharshanan/tomcat_demos </h1>
+
+
+
