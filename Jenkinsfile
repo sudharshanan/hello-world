@@ -4,8 +4,9 @@ node{
    }
    stage('Compile-Package'){
       // Get maven home path
-      def Maven_home =  tool name: 'maven', type: 'maven'   
-      sh "${Maven_home}/bin/mvn package"
+      //def Maven_home =  tool name: 'maven', type: 'maven'   
+      //sh "${Maven_home}/bin/mvn package"
+      sh "mvn package"
    }
    stage('Deploy to Tomcat'){
       
