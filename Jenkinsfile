@@ -18,8 +18,10 @@ pipeline {
             git 'https://github.com/sudharshanan/hello-world'
          }
          }
+         stage('build'){
          steps{
             sh 'mvn clean install package'
          }
         }
     }
+}
