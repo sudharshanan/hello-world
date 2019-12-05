@@ -1,5 +1,8 @@
 pipeline{
    agent any
+   tools {
+      maven 'Maven_3_5_2'
+   }
 
    stages{
       stage('SCM Checkout'){
@@ -10,9 +13,8 @@ pipeline{
 
       stage('Compile Stage'){
          steps {
-            withMaven(maven : 'maven_3_5_2' ){
-               sh 'mvn package'
-            }
+            sh 'mvn package'
+            
          }
       }
    }
