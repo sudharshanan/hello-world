@@ -27,3 +27,31 @@ if ($xmlNode -ne $null) {
 } else {
     Write-Host "Node not found with the specified XPath expression."
 }
+
+
+
+
+
+
+# Load the XML content
+$xmlPath = "path\to\your\example.xml"
+$xmlContent = [xml](Get-Content -Path $xmlPath)
+
+# Create new XML content to add
+$newXmlContent = @"
+<NewItem>
+    <ID>NewID001</ID>
+</NewItem>
+"@
+
+# Convert the new XML content to an XML node
+$newXmlNode = [xml]$newXmlContent
+
+# Find the target node using XPath
+$targetNode = $xmlContent.SelectSingleNode("//Items")
+
+# Append the new XML content to the target node
+$targetNode.AppendChild($xmlContent.ImportNode($newXmlNode.DocumentElement, $true))
+
+# Save the modified XML content
+$xmlContent.Save($xmlPath)
