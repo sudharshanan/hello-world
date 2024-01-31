@@ -1,90 +1,29 @@
-Certainly! Let's assume you have an XML file named "example.xml" with the following content:<Root>
-    <Target>
-        <Element>Existing Content</Element>
-    </Target>
-</Root>And you have an input file named "input.txt" with the following content:This is the new content.Now, you can use the PowerShell script to add the new content to the XML file. Save the script in a file, for example, "update-xml.ps1," and run it:# update-xml.ps1
+# Load the XML content
+$xmlContent = Get-Content -Path "path\to\your\example.xml"
 
-# Load XML from a file
-$xmlFilePath = "C:\Path\To\Your\example.xml"
-$xmlContent = Get-Content -Path $xmlFilePath
+# Create an XPath expression to find the target node
+$xPathExpression = "//Items"
 
-# Create an XML object
-$xml = [xml]$xmlContent
+# Use Select-Xml to find the node(s) based on the XPath expression
+$xmlNode = Select-Xml -Xml $xmlContent -XPath $xPathExpression
 
-# Define XPath expression to find the target element
-$xPath = "//Root/Target/Element"
+# Check if the node was found
+if ($xmlNode -ne $null) {
+    # Create new XML content to add
+    $newXmlContent = @"
+    <NewItem>
+        <ID>NewID001</ID>
+    </NewItem>
+"@
 
-# Find the element using Select-Xml
-$targetElement = $xml | Select-Xml -XPath $xPath
+    # Convert the new XML content to an XML node
+    $newXmlNode = [xml]$newXmlContent
 
-# Check if the element exists
-if ($targetElement.Node) {
-    # Read content from input file
-    $inputFilePath = "C:\Path\To\Your\input.txt"
-    $newContent = Get-Content -Path $inputFilePath
+    # Append the new XML content to the target node
+    $xmlNode.Node.AppendChild($xmlNode.Node.OwnerDocument.ImportNode($newXmlNode.DocumentElement, $true))
 
-    # Add new content or modify existing content
-    $newElement = $xml.CreateElement("NewElement")
-    $newElement.InnerText = $newContent
-
-    $targetElement.Node.AppendChild($newElement)
-
-    # Save the modified XML
-    $xml.Save($xmlFilePath)
-
-    Write-Host "Content added successfully."
+    # Save the modified XML content
+    $xmlContent.Save("path\to\your\example.xml")
 } else {
-    Write-Host "Target element not found."
-}Run the script, and it will update the XML file. After running the script, the "example.xml" file will look like this:<Root>
-    <Target>
-        <Element>Existing Content<NewElement>This is the new content.</NewElement></Element>
-    </Target>
-</Root>Adjust the file paths in the script according to your actual file locations.
-############
-
-
-
-
-
-
-$xmlFilePath = "C:\Path\To\Your\data.xml"
-$tagName = "price"
-
-# Use Select-Xml to select all occurrences of the tag
-$xmlContent = Get-Content -Path $xmlFilePath
-$selectedTags = Select-Xml -Content $xmlContent -XPath "//${tagName}"
-
-# Iterate through each selected tag and display its value
-foreach ($tag in $selectedTags) {
-    $tagValue = $tag.Node.InnerText
-    Write-Output "Value of <$tagName>: $tagValue"
+    Write-Host "Node not found with the specified XPath expression."
 }
-#######
-Sure, let's assume you have an XML file like this:
-
-```xml
-<Root>
-    <ExampleTag>This is the content of ExampleTag</ExampleTag>
-    <!-- Other XML elements may be present here -->
-</Root>
-```
-
-Now, using the PowerShell code:
-
-```powershell
-$xmlFilePath = "Path\to\your\file.xml"
-$xmlContent = Get-Content -Path $xmlFilePath
-$xmlObject = [xml]$xmlContent
-
-# Access and print content of <ExampleTag>
-$exampleTagContent = $xmlObject.SelectSingleNode("//ExampleTag").InnerText
-Write-Host "Content of ExampleTag: $exampleTagContent"
-```
-
-This script will output:
-
-```
-Content of ExampleTag: This is the content of ExampleTag
-```
-
-Make sure to adjust the tag names and file path according to your specific XML file structure.
