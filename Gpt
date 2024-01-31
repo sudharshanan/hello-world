@@ -40,3 +40,22 @@ if ($targetElement.Node) {
         <Element>Existing Content<NewElement>This is the new content.</NewElement></Element>
     </Target>
 </Root>Adjust the file paths in the script according to your actual file locations.
+############
+
+
+
+
+
+
+$xmlFilePath = "C:\Path\To\Your\data.xml"
+$tagName = "price"
+
+# Use Select-Xml to select all occurrences of the tag
+$xmlContent = Get-Content -Path $xmlFilePath
+$selectedTags = Select-Xml -Content $xmlContent -XPath "//${tagName}"
+
+# Iterate through each selected tag and display its value
+foreach ($tag in $selectedTags) {
+    $tagValue = $tag.Node.InnerText
+    Write-Output "Value of <$tagName>: $tagValue"
+}
