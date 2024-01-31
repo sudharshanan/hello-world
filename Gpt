@@ -59,3 +59,32 @@ foreach ($tag in $selectedTags) {
     $tagValue = $tag.Node.InnerText
     Write-Output "Value of <$tagName>: $tagValue"
 }
+#######
+Sure, let's assume you have an XML file like this:
+
+```xml
+<Root>
+    <ExampleTag>This is the content of ExampleTag</ExampleTag>
+    <!-- Other XML elements may be present here -->
+</Root>
+```
+
+Now, using the PowerShell code:
+
+```powershell
+$xmlFilePath = "Path\to\your\file.xml"
+$xmlContent = Get-Content -Path $xmlFilePath
+$xmlObject = [xml]$xmlContent
+
+# Access and print content of <ExampleTag>
+$exampleTagContent = $xmlObject.SelectSingleNode("//ExampleTag").InnerText
+Write-Host "Content of ExampleTag: $exampleTagContent"
+```
+
+This script will output:
+
+```
+Content of ExampleTag: This is the content of ExampleTag
+```
+
+Make sure to adjust the tag names and file path according to your specific XML file structure.
