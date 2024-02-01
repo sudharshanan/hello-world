@@ -15,3 +15,23 @@ foreach ($configChange in $xmlContent.SelectNodes("//DeployConfig/ConfigChange")
 
     Write-Output "Type: $type, File: $file, FindXPath: $findXPath"
 }
+
+
+
+# Assuming your file has a .ansible extension
+$filePath = "path\to\your\DeployConfig.ansible"
+
+# Read the file content
+$fileContent = Get-Content -Path $filePath
+
+# Convert the content into XML
+[xml]$xmlContent = $fileContent -join "`n"
+
+# Extract details from all ConfigChange elements
+foreach ($configChange in $xmlContent.SelectNodes("//DeployConfig/ConfigChange")) {
+    $type = $configChange.type
+    $file = $configChange.file
+    $findXPath = $configChange.findXPath
+
+    Write-Output "Type: $type, File: $file, FindXPath: $findXPath"
+}
