@@ -1,57 +1,17 @@
-# Load the XML content
-$xmlContent = Get-Content -Path "path\to\your\example.xml"
+# Assuming your file has a .ansible extension
+$filePath = "path\to\your\DeployConfig.ansible"
 
-# Create an XPath expression to find the target node
-$xPathExpression = "//Items"
+# Read the file content
+$fileContent = Get-Content -Path $filePath
 
-# Use Select-Xml to find the node(s) based on the XPath expression
-$xmlNode = Select-Xml -Xml $xmlContent -XPath $xPathExpression
+# Convert the content into XML
+[xml]$xmlContent = $fileContent -join "`n"
 
-# Check if the node was found
-if ($xmlNode -ne $null) {
-    # Create new XML content to add
-    $newXmlContent = @"
-    <NewItem>
-        <ID>NewID001</ID>
-    </NewItem>
-"@
+# Extract details from ConfigChange elements
+foreach ($configChange in $xmlContent.SelectNodes("//DeployConfig/ConfigChange")) {
+    $type = $configChange.type
+    $file = $configChange.file
+    $findXPath = $configChange.findXPath
 
-    # Convert the new XML content to an XML node
-    $newXmlNode = [xml]$newXmlContent
-
-    # Append the new XML content to the target node
-    $xmlNode.Node.AppendChild($xmlNode.Node.OwnerDocument.ImportNode($newXmlNode.DocumentElement, $true))
-
-    # Save the modified XML content
-    $xmlContent.Save("path\to\your\example.xml")
-} else {
-    Write-Host "Node not found with the specified XPath expression."
+    Write-Output "Type: $type, File: $file, FindXPath: $findXPath"
 }
-
-
-
-
-
-
-# Load the XML content
-$xmlPath = "path\to\your\example.xml"
-$xmlContent = [xml](Get-Content -Path $xmlPath)
-
-# Create new XML content to add
-$newXmlContent = @"
-<NewItem>
-    <ID>NewID001</ID>
-</NewItem>
-"@
-
-# Convert the new XML content to an XML node
-$newXmlNode = [xml]$newXmlContent
-
-# Find the target node using XPath
-$targetNode = $xmlContent.SelectSingleNode("//Items")
-
-# Append the new XML content to the target node
-$targetNode.AppendChild($xmlContent.ImportNode($newXmlNode.DocumentElement, $true))
-
-# Save the modified XML content
-$xmlContent.Save($xmlPath)
